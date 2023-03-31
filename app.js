@@ -41,28 +41,44 @@ function flipACard(e) {
     compareCard(e);
 }
 
-
-let dataAttribute = [];
-
+let firstCard = null;
+let secondCard = null
 function compareCard(e) {
-    dataAttribute.unshift(e.target.getAttribute("data-attr"));
-    
-    if (dataAttribute.length === 1) {
-        return;
-    } else if (dataAttribute.length === 2) {
-        if (dataAttribute[0] !== dataAttribute[1]) {
-            console.log(dataAttribute);
-            setTimeout(() => {
-                const activeElements = document.querySelectorAll(".active");
-                for (let i = activeElements.length; i > 0; i--) {
-                    console.log(i);
-                    activeElements[activeElements.length - 1].classList.remove("active");
-                    activeElements[activeElements.length -2].classList.remove("active");
-                }
-            }, 1000);
+    const clickedCard = e.target;
+  
+    if (!firstCard) {
+      firstCard = clickedCard;
+    } else if (!secondCard) {
+      secondCard = clickedCard;
+      if (firstCard.dataset.attr === secondCard.dataset.attr) {
+       
+        firstCard = null;
+        secondCard = null;
+  
+        const allCards = Array.from(cardList);
+        if (allCards.every((card) => card.children[0].children[1].classList.contains("active"))) {
+          // Arrêter le jeu
+            cardList.forEach((card) => {
+            card.removeEventListener("click", flipACard);
+          });
         }
-        dataAttribute = [];
+      } else {
+        // les cartes ne sont pas identiques
+        setTimeout(() => {
+          firstCard.children[0].children[1].classList.remove("active");
+          secondCard.children[0].children[1].classList.remove("active");
+          firstCard = null;
+          secondCard = null;
+        }, 1000);
+      }
     }
-}
+  }
+  
+
+
+
+
+
+
 
 
