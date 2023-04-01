@@ -42,28 +42,33 @@ function flipACard(e) {
 }
 
 let firstCard = null;
-let secondCard = null
+let secondCard = null;
+let count = 0;
+const score = document.querySelector(".score");
+const advice = document.querySelector(".advice");
 function compareCard(e) {
     const clickedCard = e.target;
-  
+    count += 0.5;
+    score.textContent = `Nombre de coups : ${Math.floor(count) }`
     if (!firstCard) {
       firstCard = clickedCard;
     } else if (!secondCard) {
       secondCard = clickedCard;
       if (firstCard.dataset.attr === secondCard.dataset.attr) {
-       
+        
         firstCard = null;
         secondCard = null;
-  
         const allCards = Array.from(cardList);
         if (allCards.every((card) => card.children[0].children[1].classList.contains("active"))) {
-          // Arrêter le jeu
             cardList.forEach((card) => {
             card.removeEventListener("click", flipACard);
+
+            advice.textContent = `Bravo ! Appuyez sur "espace" pour relancer une partie.`;
+
+            score.textContent = `Votre score final : ${count}`;
           });
         }
       } else {
-        // les cartes ne sont pas identiques
         setTimeout(() => {
           firstCard.children[0].children[1].classList.remove("active");
           secondCard.children[0].children[1].classList.remove("active");
@@ -71,10 +76,23 @@ function compareCard(e) {
           secondCard = null;
         }, 1000);
       }
+      delay()
     }
   }
   
 
+  function delay() {
+    cardList.forEach(card => {
+      card.removeEventListener("click", flipACard);
+    });
+    
+    setTimeout(() => {
+      cardList.forEach(card => {
+          card.addEventListener("click", flipACard);
+      });
+    }, 1000);
+  }
+  
 
 
 
